@@ -1,15 +1,14 @@
 package xyz.attituding.mod;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.*;
 
 public class Mod implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
@@ -17,21 +16,25 @@ public class Mod implements ModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger("mod");
 
-	public static final String SERVER_URL = "https://attituding.live";
+	public static final String SERVER_URL = "https://serverless.attituding.workers.dev";
 
 	@Override
 	public void onInitialize()
 	{
-		LOGGER.info("Hello Fabric world!");
-
 		// Register event listeners
-		ServerPlayConnectionEvents.JOIN.register((handler, packet, server) -> preconditions(false, server));
-		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> preconditions(true, server));
+		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> preconditions(true, handler));
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> preconditions(false, handler));
 	}
 
-	private static void preconditions(boolean joined, MinecraftServer server) {
-		if (!server.isSingleplayer()) {
-			ping(joined, server.getServerIp());
+	private static void preconditions(boolean joined, ClientPlayNetworkHandler handler) {
+		SocketAddress socketAddress = handler.getConnection().getAddress();
+
+		// Verify SocketAddress is InetSocketAddress
+		// CC BY-SA 3.0 https://stackoverflow.com/a/22691011
+		if (socketAddress instanceof InetSocketAddress inetSocketAddress) {
+			ping(joined, inetSocketAddress.getHostString());
+		} else {
+			LOGGER.warn("Socket address not an internet protocol socket: " + socketAddress.toString());
 		}
 	}
 
@@ -54,7 +57,7 @@ public class Mod implements ModInitializer {
 			connection.setInstanceFollowRedirects(true);
 			connection.setRequestProperty("AUTHORIZATION", "my-secret-auth-token");
 
-			LOGGER.info(ip, ip.equals(""), ip.equals(" "), joined);
+			LOGGER.debug("Connecting to " + ip + " with joined " + joined);
 
 			// Connect to the URL
 			connection.connect();
