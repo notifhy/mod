@@ -1,4 +1,4 @@
-package xyz.attituding.mod;
+package xyz.attituding.notifhy;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import java.net.*;
 
-public class Mod implements ModInitializer {
+public class NotifHy implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
-	public static final Logger LOGGER = LoggerFactory.getLogger("mod");
+	public static final Logger LOGGER = LoggerFactory.getLogger("notifhy");
 
 	public static final String SERVER_URL = "https://serverless.attituding.workers.dev";
 

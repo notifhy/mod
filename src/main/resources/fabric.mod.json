@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "notifhy",
   "version": "0.0.1",
 
-  "name": "Mod",
-  "description": "Hi",
+  "name": "NotifHy",
+  "description": "notifhy",
   "authors": [
     "Attituding"
   ],
@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "xyz.attituding.mod.Mod"
+      "xyz.attituding.notifhy.NotifHy"
     ]
   },
 
