@@ -10,15 +10,16 @@
   ],
   "contact": {
     "homepage": "https://github.com/notifhy/mod",
+    "issues": "https://github.com/notifhy/mod/issues",
     "sources": "https://github.com/notifhy/mod"
   },
 
-  "license": "CC0-1.0",
+  "license": "MIT",
   "icon": "assets/modid/icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "main": [
+    "client": [
       "xyz.attituding.notifhy.NotifHy"
     ]
   },
@@ -28,8 +29,5 @@
     "fabric-api": "*",
     "minecraft": "~1.19",
     "java": ">=17"
-  },
-  "suggests": {
-    "another-mod": "*"
   }
 }

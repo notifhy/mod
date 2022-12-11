@@ -1,6 +1,6 @@
 package xyz.attituding.notifhy;
 
-import net.fabricmc.api.ModInitializer;
+import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.*;
 
-public class NotifHy implements ModInitializer {
+public class NotifHy implements ClientModInitializer {
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
@@ -19,7 +19,7 @@ public class NotifHy implements ModInitializer {
 	public static final String SERVER_URL = "https://serverless.attituding.workers.dev";
 
 	@Override
-	public void onInitialize()
+	public void onInitializeClient()
 	{
 		// Register event listeners
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> preconditions(true, handler));
