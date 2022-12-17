@@ -15,7 +15,7 @@
   },
 
   "license": "MIT",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/notifhy/icon.png",
 
   "environment": "client",
   "entrypoints": {
@@ -25,9 +25,9 @@
   },
 
   "depends": {
-    "fabricloader": ">=0.14.10",
-    "fabric-api": "*",
-    "minecraft": "~1.19",
+    "fabricloader": ">=0.14.11",
+    "fabric": ">=0.28.0",
+    "minecraft": ">=1.18",
     "java": ">=17"
   }
 }
