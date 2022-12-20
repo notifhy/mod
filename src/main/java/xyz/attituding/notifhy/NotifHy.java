@@ -1,5 +1,6 @@
 package xyz.attituding.notifhy;
 
+import com.google.common.net.InternetDomainName;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
@@ -8,7 +9,10 @@ import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.net.URL;
 
 public class NotifHy implements ClientModInitializer {
 	// This logger is used to write text to the console and the log file.
@@ -31,11 +35,21 @@ public class NotifHy implements ClientModInitializer {
 
 		// Verify SocketAddress is InetSocketAddress
 		// CC BY-SA 3.0 https://stackoverflow.com/a/22691011
-		if (socketAddress instanceof InetSocketAddress inetSocketAddress) {
-			ping(joined, inetSocketAddress.getHostString());
-		} else {
+		if (!(socketAddress instanceof InetSocketAddress inetSocketAddress)) {
 			LOGGER.warn("Socket address not an internet protocol socket: " + socketAddress.toString());
+			return;
 		}
+
+		String hostString = inetSocketAddress.getHostString();
+		String privateDomain = InternetDomainName.from(hostString).topPrivateDomain().toString();
+
+		// Ignore all domains that are not Hypixel (for now, subject to change)
+		if (!privateDomain.equals("hypixel.net")) {
+			LOGGER.warn("Private domain is not Hypixel: " + privateDomain);
+			return;
+		}
+
+		ping(joined, privateDomain);
 	}
 
 	public static void ping(boolean joined, String ip) {
@@ -65,9 +79,9 @@ public class NotifHy implements ClientModInitializer {
 			// Check the response code and log a message
 			int responseCode = connection.getResponseCode();
 			if (responseCode == HttpURLConnection.HTTP_OK) {
-				LOGGER.info("Successfully pinged server URL with player join/leave status: " + url);
+				LOGGER.info("Successfully pinged: " + url);
 			} else {
-				LOGGER.warn("Failed to ping server URL with player join/leave status: " + url + " (response code: " + responseCode + ")");
+				LOGGER.warn("Failed to ping: " + url + " (response code: " + responseCode + ")");
 			}
 		} catch (Exception e) {
 			LOGGER.error("An error occurred while pinging server URL with player join/leave status", e);
