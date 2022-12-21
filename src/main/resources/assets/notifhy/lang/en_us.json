@@ -1,0 +1,6 @@
+{
+  "title.notifhy.config": "NotifHy Config",
+  "title.notifhy.config.authentication": "Authentication Token",
+  "title.notifhy.config.authentication.description": "Obtain an authentication token from the /modules menu"
+}
+
