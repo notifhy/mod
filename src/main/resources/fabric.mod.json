@@ -20,7 +20,7 @@
       "xyz.attituding.notifhy.NotifHy"
     ],
     "modmenu": [
-      "xyz.attituding.notifhy.config.NotifHyModMenuApiImpl"
+      "xyz.attituding.notifhy.config.NotifHyModMenuIntegration"
     ]
   },
   "depends": {
