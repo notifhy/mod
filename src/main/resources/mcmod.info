@@ -1,0 +1,18 @@
+[
+  {
+	"modid": "notifhy",
+	"name": "NotifHy",
+	"description": "aaaaaaa",
+	"version": "0.0.1",
+	"mcversion": "[1.8.9-1.12.2]",
+	"url": "https://github.com/notifhy/mod",
+	"updateUrl": "",
+	"authorList": [
+	  "Attituding"
+	],
+	"credits": "",
+	"logoFile": "",
+	"screenshots": [],
+	"dependencies": []
+  }
+]
