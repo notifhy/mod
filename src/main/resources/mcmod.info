@@ -11,7 +11,7 @@
 	  "Attituding"
 	],
 	"credits": "",
-	"logoFile": "",
+	"logoFile": "/assets/notifhy/icon.png",
 	"screenshots": [],
 	"dependencies": []
   }
