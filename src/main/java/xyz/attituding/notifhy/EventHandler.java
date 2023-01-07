@@ -1,9 +1,10 @@
 package xyz.attituding.notifhy;
 
+import com.google.common.net.InternetDomainName;
 import com.google.gson.JsonObject;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -12,25 +13,28 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.Base64;
 
 public class EventHandler {
     @SubscribeEvent
     public void onPlayerLoggedIn(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        // event.manager.getRemoteAddress()
+        NotifHy.LOGGER.info(event.manager.getRemoteAddress());
         JsonObject json = new JsonObject();
         json.addProperty("joined", true);
-        preconditions(json);
+        preconditions(json, event.manager.getRemoteAddress());
     }
 
     @SubscribeEvent
     public void onPlayerLoggedOut(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+        NotifHy.LOGGER.info(event.manager.getRemoteAddress());
         JsonObject json = new JsonObject();
         json.addProperty("joined", false);
-        preconditions(json);
+        preconditions(json, event.manager.getRemoteAddress());
     }
 
-    private static void preconditions(JsonObject json) {
+    private static void preconditions(JsonObject json, SocketAddress socketAddress) {
 //        NotifHyConfig config = AutoConfig.getConfigHolder(NotifHyConfig.class).getConfig();
 //
 //        if (config.authentication.length() == 0) {
@@ -38,18 +42,24 @@ public class EventHandler {
 //            return;
 //        }
 
-        if (MinecraftServer.getServer().isSinglePlayer()) {
-            NotifHy.LOGGER.info("Server is local world");
+        // SocketAddress is usually a InetSocketAddress
+        if (!(socketAddress instanceof InetSocketAddress)) {
+            NotifHy.LOGGER.warn("Socket address is not an internet protocol socket, might be a local world: " + socketAddress.toString());
             return;
         }
 
+        // broken for some TLDs, as I can't get the latest guava version working (for now)
+        InetSocketAddress iNetSocketAddress = (InetSocketAddress) socketAddress;
+        String hostString = iNetSocketAddress.getHostString();
+        String domain = InternetDomainName.from(hostString).topPrivateDomain().toString();
+
 //        // Ignore all domains that are not in the list (modifiable in config)
 //        if (!config.advanced.domains.contains(domain)) {
-//            LOGGER.warn("Private domain is not in list: " + domain);
+//            NotifHy.LOGGER.warn("Private domain is not in list: " + domain);
 //            return;
 //        }
 
-        json.addProperty("domain", MinecraftServer.getServer().getServerHostname());
+        json.addProperty("domain", domain);
 
         ping(json);
     }
@@ -58,7 +68,14 @@ public class EventHandler {
         try {
             // NotifHyConfig config = AutoConfig.getConfigHolder(NotifHyConfig.class).getConfig();
 
-            String uuid = Minecraft.getMinecraft().thePlayer.getUniqueID().toString();
+            GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
+
+            if (profile == null) {
+                NotifHy.LOGGER.warn("UUID is null, cannot proceed");
+                return;
+            }
+
+            String uuid = profile.getId().toString();
             String authorization = "Basic " + Base64.getEncoder().encodeToString((uuid + ":"/* + config.authentication */).getBytes());
 
             HttpClient httpClient = HttpClientBuilder.create().build();
@@ -69,7 +86,7 @@ public class EventHandler {
 
             HttpResponse response = httpClient.execute(request);
 
-            NotifHy.LOGGER.info("Sending " + json);
+            NotifHy.LOGGER.info("Sending " + json + " for " + uuid);
 
             int responseCode = response.getStatusLine().getStatusCode();
 

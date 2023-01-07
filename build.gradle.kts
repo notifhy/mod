@@ -7,6 +7,8 @@ plugins {
 }
 
 val forgeVersion: String by project
+val gsonVersion: String by project
+val guavaVersion: String by project
 val mcpMappings: String by project
 val modGroup: String by project
 val modId: String by project
@@ -46,6 +48,9 @@ dependencies {
     minecraft("com.mojang:minecraft:${minecraftVersion}")
     mappings("de.oceanlabs.mcp:mcp_stable:${mcpMappings}")
     forge("net.minecraftforge:forge:${forgeVersion}")
+    implementation("com.google.code.gson:gson:${gsonVersion}")
+    // This crashes Forge and I spent 3 hours just to fail to fix it
+    // implementation("com.google.guava:guava:${guavaVersion}")
 }
 
 // Tasks:
@@ -60,7 +65,6 @@ tasks.withType(Jar::class) {
         this["ForceLoadAsMod"] = "true"
     }
 }
-
 
 val remapJar by tasks.named<net.fabricmc.loom.task.RemapJarTask>("remapJar") {
     archiveClassifier.set("all")
