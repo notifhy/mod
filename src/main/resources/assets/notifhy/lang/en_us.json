@@ -6,5 +6,6 @@
   "text.autoconfig.notifhy.option.advanced.server": "Server URL",
   "text.autoconfig.notifhy.option.advanced.server.@PrefixText": "Set a custom server URL to send join/leave statuses to",
   "text.autoconfig.notifhy.option.advanced.domains": "Domains",
-  "text.autoconfig.notifhy.option.advanced.domains.@PrefixText": "Set the domains that this mod should send statuses for"
+  "text.autoconfig.notifhy.option.advanced.domains.@PrefixText": "Set the domains that this mod should send statuses for",
+  "chat.notifhy.preconditions.authentication": "Please add your authentication token to the config"
 }
