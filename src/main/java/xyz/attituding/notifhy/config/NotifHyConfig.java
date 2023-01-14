@@ -5,6 +5,7 @@ import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import xyz.attituding.notifhy.NotifHy;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Config(name = NotifHy.MOD_ID)
@@ -17,10 +18,9 @@ public class NotifHyConfig implements ConfigData {
 
     public static class Advanced {
         @ConfigEntry.Gui.PrefixText
-        public String server = "https://serverless.attituding.workers.dev";
-        // https://tunnels.notifhy.attituding.xyz
+        public String server = "https://notifhy-api.attituding.xyz/v1/event";
 
         @ConfigEntry.Gui.PrefixText
-        public List<String> domains = List.of("hypixel.net");
+        public List<String> domains = Arrays.asList("hypixel.net");
     }
 }

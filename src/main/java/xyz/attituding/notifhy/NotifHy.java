@@ -8,7 +8,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -64,7 +65,7 @@ public class NotifHy implements ClientModInitializer {
 
         if (config.authentication.length() == 0) {
             LOGGER.info("No authentication token set");
-            Chat.send(new TranslatableText("chat.notifhy.preconditions.authentication"), Formatting.RED);
+            Chat.send(Text.translatable("chat.notifhy.preconditions.authentication").setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(false)));
             return;
         }
 

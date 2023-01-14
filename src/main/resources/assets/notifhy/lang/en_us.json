@@ -4,8 +4,8 @@
   "text.autoconfig.notifhy.option.authentication.@PrefixText": "Get an authentication token from the /modules menu",
   "text.autoconfig.notifhy.option.advanced": "Advanced",
   "text.autoconfig.notifhy.option.advanced.server": "Server URL",
-  "text.autoconfig.notifhy.option.advanced.server.@PrefixText": "Set a custom server URL to send join/leave statuses to",
+  "text.autoconfig.notifhy.option.advanced.server.@PrefixText": "Set a custom server URL to send events to",
   "text.autoconfig.notifhy.option.advanced.domains": "Domains",
-  "text.autoconfig.notifhy.option.advanced.domains.@PrefixText": "Set the domains that this mod should send statuses for",
-  "chat.notifhy.preconditions.authentication": "Please add your authentication token to the config"
+  "text.autoconfig.notifhy.option.advanced.domains.@PrefixText": "Set the domains that this mod should send events for",
+  "chat.notifhy.preconditions.authentication": "Please configure this mod by adding your authentication token"
 }

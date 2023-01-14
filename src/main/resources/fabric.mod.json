@@ -3,7 +3,7 @@
   "id": "notifhy",
   "version": "0.0.1",
   "name": "NotifHy",
-  "description": "notifhy",
+  "description": "The companion mod for the NotifHy",
   "authors": [
     "Attituding"
   ],
@@ -24,10 +24,10 @@
     ]
   },
   "depends": {
-    "fabric": ">=0.28.0",
-    "fabricloader": ">=0.14.11",
+    "fabric-api": ">=0.28.0",
+    "fabricloader": ">=0.14.10",
     "java": ">=17",
-    "minecraft": ">=1.18",
-    "modmenu": "3.x.x"
+    "minecraft": "~1.19",
+    "modmenu": "^5.0.0"
   }
 }
