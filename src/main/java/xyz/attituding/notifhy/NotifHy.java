@@ -13,8 +13,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,6 +27,7 @@ import java.util.Base64;
 @Mod(modid = "notifhy", version = "0.0.1")
 public class NotifHy {
     public static final Logger LOGGER = LogManager.getLogger("NotifHy");
+    private static boolean joinedState = false;
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
@@ -47,15 +50,27 @@ public class NotifHy {
 
     private static void preconditions(JsonObject json, NetworkManager manager) {
 //        NotifHyConfig config = AutoConfig.getConfigHolder(NotifHyConfig.class).getConfig();
-//
+
+        if (json.has("joined")) {
+            boolean newJoinedState = json.get("joined").getAsBoolean();
+            if (newJoinedState == joinedState) {
+                LOGGER.info("Skipped over duplicate joined event, value is " + joinedState);
+                return;
+            }
+
+            joinedState = newJoinedState;
+        }
+
 //        if (config.authentication.length() == 0) {
-//            LOGGER.warn("No authentication token set");
+//            LOGGER.info("No authentication token set");
+//            Chat.send(Text.translatable("chat.notifhy.preconditions.authentication").setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(false)));
 //            return;
 //        }
 
+
         SocketAddress socketAddress = manager.getRemoteAddress();
 
-        // SocketAddress is usually an InetSocketAddress
+        // Verify SocketAddress is InetSocketAddress
         if (!(socketAddress instanceof InetSocketAddress)) {
             NotifHy.LOGGER.warn("Socket address is not an internet protocol socket, might be a local world: " + socketAddress.toString());
             return;
@@ -63,9 +78,9 @@ public class NotifHy {
 
         String hostString = ((InetSocketAddress) socketAddress).getHostString();
 
-//        // Ignore all domains that are not in the list (modifiable in config)
+// Ignore all hosts that are not in the list (modifiable in config)
 //        if (!config.advanced.domains.contains(domain)) {
-//            NotifHy.LOGGER.warn("Private domain is not in list: " + domain);
+//            LOGGER.info("Private domain is not in list: " + domain);
 //            return;
 //        }
 
@@ -81,32 +96,44 @@ public class NotifHy {
             GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
 
             if (profile == null) {
-                NotifHy.LOGGER.warn("UUID is null, cannot proceed");
+                LOGGER.warn("UUID is null, cannot proceed");
                 return;
             }
 
             String uuid = profile.getId().toString();
+
+            // Normalize uuid as uuid may not have dashes
+            if (uuid.length() == 32) {
+                StringBuilder uuidTemp = new StringBuilder(uuid);
+                uuidTemp.insert(20, '-');
+                uuidTemp.insert(16, '-');
+                uuidTemp.insert(12, '-');
+                uuidTemp.insert(8, '-');
+                uuid = uuidTemp.toString();
+            }
+
             String authorization = "Basic " + Base64.getEncoder().encodeToString((uuid + ":"/* + config.authentication */).getBytes());
 
             HttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost request = new HttpPost(/*config.advanced.server*/ "https://notifhy-api.attituding.xyz/v1/event");
-            request.addHeader("Context-Type", "application/json");
             request.addHeader("Authorization", authorization);
-            request.setEntity(new StringEntity(json.toString()));
+            request.setEntity(new StringEntity(json.toString(), ContentType.APPLICATION_JSON));
 
             HttpResponse response = httpClient.execute(request);
 
-            NotifHy.LOGGER.debug("Sending " + json);
+            LOGGER.debug("Sent " + EntityUtils.toString(request.getEntity()));
 
             int responseCode = response.getStatusLine().getStatusCode();
 
-            if (responseCode == HttpStatus.SC_OK) {
-                NotifHy.LOGGER.debug("Successfully pinged");
+            if (responseCode >= HttpStatus.SC_OK && responseCode < HttpStatus.SC_MULTIPLE_CHOICES) {
+                LOGGER.info("Successfully pinged");
+            } else if (response.getEntity() != null) {
+                LOGGER.warn("Failed to ping with response code " + responseCode + " and body " + EntityUtils.toString(response.getEntity()));
             } else {
-                NotifHy.LOGGER.warn("Failed to ping with response code " + responseCode);
+                LOGGER.warn("Failed to ping with response code " + responseCode);
             }
         } catch (Exception e) {
-            NotifHy.LOGGER.error("Failed to ping", e);
+            LOGGER.error("Failed to ping", e);
         }
     }
 }
