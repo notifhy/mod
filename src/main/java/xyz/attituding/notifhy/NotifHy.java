@@ -1,6 +1,5 @@
 package xyz.attituding.notifhy;
 
-import com.google.common.net.InternetDomainName;
 import com.google.gson.JsonObject;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
@@ -72,22 +71,20 @@ public class NotifHy implements ClientModInitializer {
         SocketAddress socketAddress = handler.getConnection().getAddress();
 
         // Verify SocketAddress is InetSocketAddress
-        // CC BY-SA 3.0 https://stackoverflow.com/a/22691011
         if (!(socketAddress instanceof InetSocketAddress inetSocketAddress)) {
             LOGGER.info("Socket address is not an internet protocol socket, might be a local world: " + socketAddress.toString());
             return;
         }
 
         String hostString = inetSocketAddress.getHostString();
-        String domain = InternetDomainName.from(hostString).topPrivateDomain().toString();
 
         // Ignore all domains that are not in the list (modifiable in config)
-        if (!config.advanced.domains.contains(domain)) {
-            LOGGER.info("Private domain is not in list: " + domain);
+        if (!config.advanced.domains.contains(hostString)) {
+            LOGGER.info("Private domain is not in list: " + hostString);
             return;
         }
 
-        json.addProperty("domain", domain);
+        json.addProperty("domain", hostString);
 
         ping(json);
     }
@@ -97,7 +94,7 @@ public class NotifHy implements ClientModInitializer {
             NotifHyConfig config = AutoConfig.getConfigHolder(NotifHyConfig.class).getConfig();
             String uuid = MinecraftClient.getInstance().getSession().getUuid();
 
-            // Normalize uuid, as uuid may not have dashes
+            // Normalize uuid as uuid may not have dashes
             if (uuid.length() == 32) {
                 StringBuilder uuidTemp = new StringBuilder(uuid);
                 uuidTemp.insert(20, '-');
