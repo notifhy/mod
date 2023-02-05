@@ -67,13 +67,6 @@ public class NotifHy {
     private static void preconditions(JsonObject json, NetworkManager manager) {
 //        NotifHyConfig config = AutoConfig.getConfigHolder(NotifHyConfig.class).getConfig();
 
-        GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
-
-        if (profile == null) {
-            LOGGER.warn("UUID is null, cannot proceed");
-            return;
-        }
-
         if (json.has("joined")) {
             boolean newJoinedState = json.get("joined").getAsBoolean();
             if (newJoinedState == joinedState) {
@@ -114,7 +107,14 @@ public class NotifHy {
         try {
             // NotifHyConfig config = AutoConfig.getConfigHolder(NotifHyConfig.class).getConfig();
 
-            String uuid = Minecraft.getMinecraft().getSession().getProfile().getId().toString();
+            GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
+
+            if (profile == null) {
+                LOGGER.warn("Profile is null, cannot proceed");
+                return;
+            }
+
+            String uuid = profile.getId().toString();
 
             // Normalize uuid as uuid may not have dashes
             if (uuid.length() == 32) {
