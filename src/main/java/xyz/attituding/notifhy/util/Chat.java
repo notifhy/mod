@@ -16,7 +16,7 @@ public class Chat {
         if (mc.player != null) {
             mc.inGameHud.getChatHud().addMessage(PREFIX.copy().append(text));
         } else {
-            NotifHy.LOGGER.warn("Player is null for some reason, this isn't supposed ot happen");
+            NotifHy.LOGGER.warn("Player is null for some reason, this isn't supposed to happen");
         }
     }
 }
