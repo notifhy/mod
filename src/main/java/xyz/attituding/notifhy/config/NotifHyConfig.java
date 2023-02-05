@@ -21,6 +21,6 @@ public class NotifHyConfig implements ConfigData {
         public String server = "https://notifhy-api.attituding.xyz/v1/event";
 
         @ConfigEntry.Gui.PrefixText
-        public List<String> domains = Arrays.asList("hypixel.net");
+        public List<String> hosts = Arrays.asList("hypixel.net");
     }
 }

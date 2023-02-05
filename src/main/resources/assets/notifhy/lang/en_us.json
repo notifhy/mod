@@ -5,7 +5,7 @@
   "text.autoconfig.notifhy.option.advanced": "Advanced",
   "text.autoconfig.notifhy.option.advanced.server": "Server URL",
   "text.autoconfig.notifhy.option.advanced.server.@PrefixText": "Set a custom server URL to send events to",
-  "text.autoconfig.notifhy.option.advanced.domains": "Domains",
-  "text.autoconfig.notifhy.option.advanced.domains.@PrefixText": "Set the domains that this mod should send events for",
+  "text.autoconfig.notifhy.option.advanced.hosts": "Hosts",
+  "text.autoconfig.notifhy.option.advanced.hosts.@PrefixText": "Set the hosts that this mod should send events for",
   "chat.notifhy.preconditions.authentication": "Please configure this mod by adding your authentication token"
 }

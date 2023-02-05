@@ -78,13 +78,13 @@ public class NotifHy implements ClientModInitializer {
 
         String hostString = inetSocketAddress.getHostString();
 
-        // Ignore all domains that are not in the list (modifiable in config)
-        if (!config.advanced.domains.contains(hostString)) {
-            LOGGER.info("Private domain is not in list: " + hostString);
+        // Ignore all hosts that are not in the list (modifiable in config)
+        if (!config.advanced.hosts.contains(hostString)) {
+            LOGGER.info("Private host is not in list: " + hostString);
             return;
         }
 
-        json.addProperty("domain", hostString);
+        json.addProperty("host", hostString);
 
         ping(json);
     }
