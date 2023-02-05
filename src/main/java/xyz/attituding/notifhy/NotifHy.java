@@ -3,8 +3,13 @@ package xyz.attituding.notifhy;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -19,6 +24,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import xyz.attituding.notifhy.util.Chat;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -32,6 +38,16 @@ public class NotifHy {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    @SubscribeEvent
+    public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+        if (event.entity instanceof EntityPlayer && event.entity.worldObj.isRemote) {
+//            NotifHyConfig config = AutoConfig.getConfigHolder(NotifHyConfig.class).getConfig();
+//            if (config.authentication.length() == 0) {
+            Chat.send(new ChatComponentTranslation("chat.notifhy.preconditions.authentication").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED).setBold(false)));
+//        }
+        }
     }
 
     @SubscribeEvent
@@ -51,6 +67,13 @@ public class NotifHy {
     private static void preconditions(JsonObject json, NetworkManager manager) {
 //        NotifHyConfig config = AutoConfig.getConfigHolder(NotifHyConfig.class).getConfig();
 
+        GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
+
+        if (profile == null) {
+            LOGGER.warn("UUID is null, cannot proceed");
+            return;
+        }
+
         if (json.has("joined")) {
             boolean newJoinedState = json.get("joined").getAsBoolean();
             if (newJoinedState == joinedState) {
@@ -63,16 +86,14 @@ public class NotifHy {
 
 //        if (config.authentication.length() == 0) {
 //            LOGGER.info("No authentication token set");
-//            Chat.send(Text.translatable("chat.notifhy.preconditions.authentication").setStyle(Style.EMPTY.withColor(Formatting.RED).withBold(false)));
 //            return;
 //        }
-
 
         SocketAddress socketAddress = manager.getRemoteAddress();
 
         // Verify SocketAddress is InetSocketAddress
         if (!(socketAddress instanceof InetSocketAddress)) {
-            NotifHy.LOGGER.warn("Socket address is not an internet protocol socket, might be a local world: " + socketAddress.toString());
+            NotifHy.LOGGER.info("Socket address is not an internet protocol socket, might be a local world: " + socketAddress.toString());
             return;
         }
 
@@ -93,14 +114,7 @@ public class NotifHy {
         try {
             // NotifHyConfig config = AutoConfig.getConfigHolder(NotifHyConfig.class).getConfig();
 
-            GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
-
-            if (profile == null) {
-                LOGGER.warn("UUID is null, cannot proceed");
-                return;
-            }
-
-            String uuid = profile.getId().toString();
+            String uuid = Minecraft.getMinecraft().getSession().getProfile().getId().toString();
 
             // Normalize uuid as uuid may not have dashes
             if (uuid.length() == 32) {
