@@ -49,8 +49,6 @@ dependencies {
     mappings("de.oceanlabs.mcp:mcp_stable:${mcpMappings}")
     forge("net.minecraftforge:forge:${forgeVersion}")
     implementation("com.google.code.gson:gson:${gsonVersion}")
-    // This crashes Forge and I spent 3 hours just to fail to fix it
-    // implementation("com.google.guava:guava:${guavaVersion}")
 }
 
 // Tasks:

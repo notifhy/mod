@@ -1,6 +1,5 @@
 package xyz.attituding.notifhy;
 
-import com.google.common.net.InternetDomainName;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
@@ -62,10 +61,7 @@ public class NotifHy {
             return;
         }
 
-        // broken for some TLDs, as I can't get the latest guava version working (for now)
-        InetSocketAddress iNetSocketAddress = (InetSocketAddress) socketAddress;
-        String hostString = iNetSocketAddress.getHostString();
-        String domain = InternetDomainName.from(hostString).topPrivateDomain().toString();
+        String hostString = ((InetSocketAddress) socketAddress).getHostString();
 
 //        // Ignore all domains that are not in the list (modifiable in config)
 //        if (!config.advanced.domains.contains(domain)) {
@@ -73,7 +69,7 @@ public class NotifHy {
 //            return;
 //        }
 
-        json.addProperty("domain", domain);
+        json.addProperty("domain", hostString);
 
         ping(json);
     }
@@ -93,7 +89,7 @@ public class NotifHy {
             String authorization = "Basic " + Base64.getEncoder().encodeToString((uuid + ":"/* + config.authentication */).getBytes());
 
             HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpPost request = new HttpPost(/*config.advanced.server*/ "https://notifhy-api.attituding.live/v1/event");
+            HttpPost request = new HttpPost(/*config.advanced.server*/ "https://notifhy-api.attituding.xyz/v1/event");
             request.addHeader("Context-Type", "application/json");
             request.addHeader("Authorization", authorization);
             request.setEntity(new StringEntity(json.toString()));
