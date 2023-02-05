@@ -93,12 +93,12 @@ public class NotifHy {
         String hostString = ((InetSocketAddress) socketAddress).getHostString();
 
 // Ignore all hosts that are not in the list (modifiable in config)
-//        if (!config.advanced.domains.contains(domain)) {
-//            LOGGER.info("Private domain is not in list: " + domain);
+//        if (!config.advanced.hosts.contains(hostString)) {
+//            LOGGER.info("Host is not in list: " + hostString);
 //            return;
 //        }
 
-        json.addProperty("domain", hostString);
+        json.addProperty("host", hostString);
 
         ping(json);
     }
