@@ -1,1 +1,10 @@
 chat.notifhy.preconditions.authentication=Please configure this mod by adding your authentication token
+config.notifhy.title=NotifHy Config
+config.notifhy.option.general.authentication=Authentication
+config.notifhy.option.general.authentication.tooltip=Get an authentication token from the /modules menu
+config.notifhy.option.advanced=Advanced
+config.notifhy.option.advanced.tooltip=You probably don't need to configure anything here
+config.notifhy.option.advanced.server=Server URL
+config.notifhy.option.advanced.server.tooltip=Set a custom server URL to send events to
+config.notifhy.option.advanced.hosts=Hosts
+config.notifhy.option.advanced.hosts.tooltip=Set the hosts that this mod should send events for
