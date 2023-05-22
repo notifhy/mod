@@ -2,7 +2,7 @@ package xyz.attituding.notifhy.config;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
+//import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.IModGuiFactory;
@@ -19,7 +19,7 @@ public class NotifHyConfigGuiFactory implements IModGuiFactory {
     public static class NotifHyGuiConfig extends GuiConfig {
 
         public NotifHyGuiConfig(GuiScreen parentScreen) {
-            super(parentScreen, getConfigElements(), NotifHy.MOD_ID, false, false, I18n.format("config.notifhy.title"));
+            super(parentScreen, getConfigElements(), NotifHy.MOD_ID, false, false, ""/* I18n.format("config.notifhy.title") */);
         }
 
         private static List<IConfigElement> getConfigElements() {
