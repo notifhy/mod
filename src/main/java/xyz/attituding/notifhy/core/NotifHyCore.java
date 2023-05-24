@@ -110,7 +110,7 @@ public class NotifHyCore {
                 uuid = uuidTemp.toString();
             }
 
-            String authorization = "Basic " + Base64.getEncoder().encodeToString((uuid + ":"/* + config.authentication */).getBytes());
+            String authorization = "Basic " + Base64.getEncoder().encodeToString((uuid + ":" + NotifHyConfig.General.authentication).getBytes());
 
             HttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost request = new HttpPost(NotifHyConfig.Advanced.server);

@@ -1,6 +1,6 @@
 package xyz.attituding.notifhy.config;
 
-// import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -30,23 +30,23 @@ public class NotifHyConfigManager {
     private void updateConfig() {
         Property property;
 
-        property = config.get(NotifHyConfig.CATEGORY_GENERAL, NotifHyConfig.KEY_AUTHENTICATION, NotifHyConfig.General.authentication);
+        property = config.get(NotifHyConfig.CATEGORY_GENERAL, NotifHyConfig.KEY_AUTHENTICATION, "");
         property.setLanguageKey("config.notifhy.option.general.authentication");
-        // property.comment = I18n.format("config.notifhy.option.general.authentication.tooltip");
+        property.comment = I18n.format("config.notifhy.option.general.authentication.tooltip");
         NotifHyConfig.General.authentication = property.getString();
 
-        property = config.get(NotifHyConfig.CATEGORY_ADVANCED, NotifHyConfig.KEY_ADVANCED_SERVER, NotifHyConfig.Advanced.server);
+        property = config.get(NotifHyConfig.CATEGORY_ADVANCED, NotifHyConfig.KEY_ADVANCED_SERVER, "https://notifhy-api.attituding.xyz/v1/event");
         property.setLanguageKey("config.notifhy.option.advanced.server");
-        // property.comment = I18n.format("config.notifhy.option.advanced.server.tooltip");
+        property.comment = I18n.format("config.notifhy.option.advanced.server.tooltip");
         NotifHyConfig.Advanced.server = property.getString();
 
-        property = config.get(NotifHyConfig.CATEGORY_ADVANCED, NotifHyConfig.KEY_ADVANCED_HOSTS, NotifHyConfig.Advanced.hosts);
+        property = config.get(NotifHyConfig.CATEGORY_ADVANCED, NotifHyConfig.KEY_ADVANCED_HOSTS, new String[]{"mc.hypixel.net"});
         property.setLanguageKey("config.notifhy.option.advanced.hosts");
-        // property.comment = I18n.format("config.notifhy.option.advanced.hosts.tooltip");
+        property.comment = I18n.format("config.notifhy.option.advanced.hosts.tooltip");
         NotifHyConfig.Advanced.hosts = property.getStringList();
 
         config.setCategoryLanguageKey(NotifHyConfig.CATEGORY_ADVANCED, "config.notifhy.option.advanced");
-        // config.setCategoryComment(NotifHyConfig.CATEGORY_ADVANCED, I18n.format("config.notifhy.option.advanced.tooltip"));
+        config.setCategoryComment(NotifHyConfig.CATEGORY_ADVANCED, I18n.format("config.notifhy.option.advanced.tooltip"));
 
         if (config.hasChanged()) {
             config.save();
