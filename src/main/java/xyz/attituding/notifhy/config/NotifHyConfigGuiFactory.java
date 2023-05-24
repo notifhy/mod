@@ -25,8 +25,8 @@ public class NotifHyConfigGuiFactory implements IModGuiFactory {
         private static List<IConfigElement> getConfigElements() {
             List<IConfigElement> elements = new ArrayList<>();
 
-            // Make general consist of top-level elements rather than having a category
-            Map<String, Property> generalProperties = NotifHy.configManager.getConfig().getCategory(NotifHyConfig.CATEGORY_GENERAL).getValues();
+            // Make CATEGORY_NONE consist of top-level elements rather than having a category
+            Map<String, Property> generalProperties = NotifHy.configManager.getConfig().getCategory(NotifHyConfig.CATEGORY_NONE).getValues();
             for (Property generalProperty : generalProperties.values()) {
                 elements.add(new ConfigElement(generalProperty));
             }

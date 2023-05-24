@@ -30,17 +30,17 @@ public class NotifHyConfigManager {
     private void updateConfig() {
         Property property;
 
-        property = config.get(NotifHyConfig.CATEGORY_GENERAL, NotifHyConfig.KEY_AUTHENTICATION, "");
-        property.setLanguageKey("config.notifhy.option.general.authentication");
-        property.comment = I18n.format("config.notifhy.option.general.authentication.tooltip");
-        NotifHyConfig.General.authentication = property.getString();
+        property = config.get(NotifHyConfig.CATEGORY_NONE, "authentication", "");
+        property.setLanguageKey("config.notifhy.option.authentication");
+        property.comment = I18n.format("config.notifhy.option.authentication.tooltip");
+        NotifHyConfig.authentication = property.getString();
 
-        property = config.get(NotifHyConfig.CATEGORY_ADVANCED, NotifHyConfig.KEY_ADVANCED_SERVER, "https://notifhy-api.attituding.xyz/v1/event");
+        property = config.get(NotifHyConfig.CATEGORY_ADVANCED, "advanced.server", "https://notifhy-api.attituding.xyz/v1/event");
         property.setLanguageKey("config.notifhy.option.advanced.server");
         property.comment = I18n.format("config.notifhy.option.advanced.server.tooltip");
         NotifHyConfig.Advanced.server = property.getString();
 
-        property = config.get(NotifHyConfig.CATEGORY_ADVANCED, NotifHyConfig.KEY_ADVANCED_HOSTS, new String[]{"mc.hypixel.net"});
+        property = config.get(NotifHyConfig.CATEGORY_ADVANCED, "advanced.hosts", new String[]{"mc.hypixel.net"});
         property.setLanguageKey("config.notifhy.option.advanced.hosts");
         property.comment = I18n.format("config.notifhy.option.advanced.hosts.tooltip");
         NotifHyConfig.Advanced.hosts = property.getStringList();

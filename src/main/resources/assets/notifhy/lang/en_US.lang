@@ -1,7 +1,7 @@
 chat.notifhy.preconditions.authentication=Please configure this mod by adding your authentication token
 config.notifhy.title=NotifHy Config
-config.notifhy.option.general.authentication=Authentication
-config.notifhy.option.general.authentication.tooltip=Get an authentication token from the /modules menu
+config.notifhy.option.authentication=Authentication
+config.notifhy.option.authentication.tooltip=Get an authentication token from the /modules menu
 config.notifhy.option.advanced=Advanced
 config.notifhy.option.advanced.tooltip=You probably don't need to configure anything here
 config.notifhy.option.advanced.server=Server URL

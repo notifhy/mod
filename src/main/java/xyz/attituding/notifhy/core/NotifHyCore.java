@@ -3,12 +3,10 @@ package xyz.attituding.notifhy.core;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import org.apache.http.HttpResponse;
@@ -29,14 +27,7 @@ import java.util.Arrays;
 import java.util.Base64;
 
 public class NotifHyCore {
-    private static boolean joinedState = false;
-
-    @SubscribeEvent
-    public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (event.entity instanceof EntityPlayer && event.entity.worldObj.isRemote && NotifHyConfig.General.authentication.isEmpty()) {
-            Chat.send(new ChatComponentTranslation("chat.notifhy.preconditions.authentication").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED).setBold(false)));
-        }
-    }
+    private boolean joinedState = false;
 
     @SubscribeEvent
     public void onPlayerLoggedIn(FMLNetworkEvent.ClientConnectedToServerEvent event) {
@@ -52,7 +43,7 @@ public class NotifHyCore {
         preconditions(json, event.manager);
     }
 
-    private static void preconditions(JsonObject json, NetworkManager manager) {
+    private void preconditions(JsonObject json, NetworkManager manager) {
         if (json.has("joined")) {
             boolean newJoinedState = json.get("joined").getAsBoolean();
             if (newJoinedState == joinedState) {
@@ -63,16 +54,17 @@ public class NotifHyCore {
             joinedState = newJoinedState;
         }
 
-        if (NotifHyConfig.General.authentication.isEmpty()) {
-            NotifHy.LOGGER.info("No authentication token set");
-            return;
-        }
-
         SocketAddress socketAddress = manager.getRemoteAddress();
 
         // Verify SocketAddress is InetSocketAddress
         if (!(socketAddress instanceof InetSocketAddress)) {
             NotifHy.LOGGER.info("Socket address is not an internet protocol socket, might be a local world: " + socketAddress.toString());
+            return;
+        }
+
+        if (NotifHyConfig.authentication.isEmpty()) {
+            NotifHy.LOGGER.info("No authentication token set");
+            Chat.send(new ChatComponentTranslation("chat.notifhy.preconditions.authentication").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED).setBold(false)));
             return;
         }
 
@@ -89,7 +81,7 @@ public class NotifHyCore {
         ping(json);
     }
 
-    private static void ping(JsonObject json) {
+    private void ping(JsonObject json) {
         try {
             GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
 
@@ -110,7 +102,7 @@ public class NotifHyCore {
                 uuid = uuidTemp.toString();
             }
 
-            String authorization = "Basic " + Base64.getEncoder().encodeToString((uuid + ":" + NotifHyConfig.General.authentication).getBytes());
+            String authorization = "Basic " + Base64.getEncoder().encodeToString((uuid + ":" + NotifHyConfig.authentication).getBytes());
 
             HttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost request = new HttpPost(NotifHyConfig.Advanced.server);
