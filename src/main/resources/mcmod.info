@@ -3,7 +3,7 @@
 	"modid": "notifhy",
 	"name": "NotifHy",
 	"description": "The companion mod for the NotifHy",
-	"version": "0.0.1",
+	"version": "0.0.1-alpha+1.8.9",
 	"mcversion": "[1.8.9-1.12.2]",
 	"url": "https://github.com/notifhy/mod",
 	"updateUrl": "",
