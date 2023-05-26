@@ -30,7 +30,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: "temurin"
-          java-version: 17
+          java-version: 8
 
       - name: Make Gradle Wrapper Executable
         if: ${{ runner.os != 'Windows' }}
