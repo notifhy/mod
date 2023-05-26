@@ -1,6 +1,6 @@
 name: Publish
 
-on: [ pull_request, workflow_dispatch ]
+on: [ push, pull_request, workflow_dispatch ]
 
 env:
   MINECRAFT_VERSION: 1.8.9
