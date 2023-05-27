@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       loader:
-        description: "Mod loader"
+        description: "Mod Loader"
         required: true
         default: fabric
         type: choice
@@ -12,16 +12,16 @@ on:
           - fabric
           - forge
       java_version:
-        description: "Compatible Java version"
+        description: "Compatible Java Version"
         required: true
         default: "17"
         type: string
       version_core:
-        description: "See semver.org for details"
+        description: "Version Core"
         required: true
         type: string
       version_type:
-        description: "See semver.org for details"
+        description: "Version Type"
         required: true
         type: string
 
