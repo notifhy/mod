@@ -11,7 +11,7 @@ env:
   LOADER: forge
   VERSION: 0.0.1-alpha+1.8.9
   NAME: NotifHy 0.0.1-alpha+1.8.9
-  FILE: /build/libs/*.jar
+  FILE: /build/libs/*
 
 permissions:
   contents: write
@@ -40,6 +40,9 @@ jobs:
 
       - name: Build
         run: ./gradlew clean build
+
+      - name: Debug
+        run: ls
 
       - name: Publish
         uses: Kir-Antipov/mc-publish@v3.2
