@@ -53,6 +53,7 @@ jobs:
       - name: Publish
         uses: Kir-Antipov/mc-publish@v3.2
         with:
+          github-commitish: "${{ env.GITHUB_SHA }}"
           github-tag: "v${{ env.VERSION }}"
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
