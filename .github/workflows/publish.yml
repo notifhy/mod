@@ -49,7 +49,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: "temurin"
-          java-version: ${{ inputs.java_version }}
+          java-version: ${{ inputs.gradle_java_version }}
 
       - name: Make Gradle Wrapper Executable
         if: ${{ runner.os != 'Windows' }}
@@ -105,6 +105,6 @@ jobs:
 
           loaders: "${{ inputs.loader }}"
           game-versions: "${{ steps.branch.outputs.branch }}"
-          java: "${{ inputs.java_version }}"
+          java: "${{ inputs.minecraft_java_version }}"
 
           files: "build/libs/notifhy-${{ steps.version.outputs.version }}.jar"
