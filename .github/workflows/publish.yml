@@ -10,7 +10,6 @@ env:
   JAVA_VERSION: 8
   VERSION: 0.0.1-alpha+1.8.9
   RELEASE_NAME: NotifHy 0.0.1-alpha for 1.8.9
-  GITHUB_TOKEN: ${{ secrets.PUBLISH_GITHUB_TOKEN }}
 
 permissions:
   contents: write
@@ -44,7 +43,7 @@ jobs:
         uses: Kir-Antipov/mc-publish@v3.2
         with:
           github-tag: "v${{env.VERSION}}"
-          github-token: "${{env.GITHUB_TOKEN}}"
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
 
           name: "${{env.RELEASE_NAME}}"
           version: "${{env.VERSION}}"
