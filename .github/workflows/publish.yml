@@ -46,18 +46,24 @@ jobs:
           cd libs
           ls
 
-      - name: Generate Metadata
+      - name: Generate Name
+        id: name
         run: |
-          echo "NAME=NotifHy ${{ env.VERSION }}" >> $GITHUB_ENV
+          echo "name=NotifHy ${{ env.VERSION }}" >> $GITHUB_OUTPUT
+
+      - name: Extract branch name
+        id: branch
+        run: |
+          echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
 
       - name: Publish
         uses: Kir-Antipov/mc-publish@v3.2
         with:
-          github-commitish: "${{ env.GITHUB_SHA }}"
+          github-commitish: "${{ steps.branch.outputs.branch }}"
           github-tag: "v${{ env.VERSION }}"
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-          name: "${{ env.NAME }}"
+          name: "${{ steps.name.outputs.name }}"
           version: "${{ env.VERSION }}"
 
           loaders: "${{ env.LOADER }}"
