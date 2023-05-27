@@ -21,13 +21,11 @@ public class ClientPlayConnectionEventsHandler {
 
     public ClientPlayConnectionEventsHandler() {
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            Event event = new Event(Event.Type.SERVER_CONNECTED.getType());
-            preconditions(event, handler);
+            preconditions(new Event(Event.Type.SERVER_CONNECTED.getType()), handler);
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            Event event = new Event(Event.Type.SERVER_DISCONNECTED.getType());
-            preconditions(event, handler);
+            preconditions(new Event(Event.Type.SERVER_DISCONNECTED.getType()), handler);
         });
     }
 
