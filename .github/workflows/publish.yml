@@ -6,12 +6,11 @@ on:
   workflow_dispatch:
 
 env:
-  MINECRAFT_VERSION: 1.8.9
-  JAVA_VERSION: 8
   LOADER: forge
-  VERSION: 0.0.1-alpha+1.8.9
-  NAME: NotifHy 0.0.1-alpha+1.8.9
-  FILE: /build/libs/*
+  JAVA_VERSION: 8
+  MINECRAFT_VERSION: 1.8.9
+  VERSION_CORE: 0.0.1
+  VERSION_TYPE: alpha
 
 permissions:
   contents: write
@@ -19,6 +18,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ env.VERSION_CORE }}-${{ env.VERSION_TYPE }}+${{ env.MINECRAFT_VERSION }}
+      NAME: NotifHy ${{ env.VERSION }}
     steps:
       - name: Check Environment Variables
         run: env
@@ -42,27 +44,21 @@ jobs:
         run: ./gradlew clean build
 
       - name: Debug
-        run: ls
-
-      - name: Debug 2
-        run: cd build
-
-      - name: Debug 3
-        run: ls
-
-      - name: Debug 4
-        run: cd libs
-
-      - name: Debug 6
-        run: ls
+        run: |
+          cd build
+          ls
+          cd libs
+          ls
 
       - name: Publish
         uses: Kir-Antipov/mc-publish@v3.2
+        env:
+          FILE: /build/libs/*
         with:
           github-tag: "v${{ env.VERSION }}"
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-          name: "${{ env.RELEASE_NAME }}"
+          name: "${{ env.NAME }}"
           version: "${{ env.VERSION }}"
 
           loaders: "${{ env.LOADER }}"
