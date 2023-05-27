@@ -6,13 +6,15 @@ on:
       loader:
         description: "Mod loader"
         required: true
+        default: fabric
         type: choice
         options:
           - fabric
           - forge
       java_version:
-        description: "Version of Java to built with"
+        description: "Compatible Java version"
         required: true
+        default: "17"
         type: string
       version_core:
         description: "See semver.org for details"
@@ -22,11 +24,6 @@ on:
         description: "See semver.org for details"
         required: true
         type: string
-env:
-  LOADER: fabric
-  JAVA_VERSION: 17
-  VERSION_CORE: 0.0.1
-  VERSION_TYPE: alpha
 
 permissions:
   contents: write
@@ -47,7 +44,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: "temurin"
-          java-version: 17
+          java-version: ${{ inputs.java_version }}
 
       - name: Make Gradle Wrapper Executable
         if: ${{ runner.os != "Windows" }}
@@ -64,10 +61,10 @@ jobs:
       - name: Generate Version
         id: version
         run: |
-          version="${{ env.VERSION_CORE }}"
+          version="${{ inputs.version_core }}"
           
-          if [[ "${{ env.VERSION_TYPE }}" != "" ]]; then
-            version+="-${{ env.VERSION_TYPE }}"
+          if [[ "${{ inputs.version_type }}" != "" ]]; then
+            version+="-${{ inputs.version_type }}"
           fi
           
           version+="+${{ steps.branch.outputs.branch }}"
@@ -76,8 +73,8 @@ jobs:
       - name: Generate Name
         id: name
         run: |
-          name="${{ env.VERSION_CORE }}"
-          version_type="${{ env.VERSION_TYPE }}"
+          name="${{ inputs.version_core }}"
+          version_type="${{ inputs.version_type }}"
           
           if [[ $version_type != "" ]]; then
             name+=" ${version_type^}"
@@ -87,7 +84,7 @@ jobs:
           echo "name=$name" >> $GITHUB_OUTPUT
 
       - name: Rename Build
-        if: ${{ env.LOADER }} === "forge"
+        if: ${{ inputs.loader }} === "forge"
         run: |
           mv build/libs/notifhy-${{ steps.version.outputs.version }}-all.jar build/libs/notifhy-${{ steps.version.outputs.version }}.jar
 
@@ -101,8 +98,8 @@ jobs:
           name: "${{ steps.name.outputs.name }}"
           version: "${{ steps.version.outputs.version }}"
 
-          loaders: "${{ env.LOADER }}"
+          loaders: "${{ inputs.loader }}"
           game-versions: "${{ steps.branch.outputs.branch }}"
-          java: "${{ env.JAVA_VERSION }}"
+          java: "${{ inputs.java_version }}"
 
           files: "build/libs/notifhy-${{ steps.version.outputs.version }}.jar"
