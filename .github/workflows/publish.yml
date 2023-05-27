@@ -1,14 +1,30 @@
-name: Publish 1.19.4
+name: Publish
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
-
+    inputs:
+      loader:
+        description: "Mod loader"
+        required: true
+        type: choice
+        options:
+          - fabric
+          - forge
+      java_version:
+        description: "Version of Java to built with"
+        required: true
+        type: string
+      version_core:
+        description: "See semver.org for details"
+        required: true
+        type: string
+      version_type:
+        description: "See semver.org for details"
+        required: true
+        type: string
 env:
   LOADER: fabric
   JAVA_VERSION: 17
-  MINECRAFT_VERSION: 1.19.4
   VERSION_CORE: 0.0.1
   VERSION_TYPE: alpha
 
@@ -34,11 +50,16 @@ jobs:
           java-version: 17
 
       - name: Make Gradle Wrapper Executable
-        if: ${{ runner.os != 'Windows' }}
+        if: ${{ runner.os != "Windows" }}
         run: chmod +x ./gradlew
 
       - name: Build
         run: ./gradlew clean build
+
+      - name: Extract Branch Name
+        id: branch
+        run: |
+          echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
 
       - name: Generate Version
         id: version
@@ -49,7 +70,7 @@ jobs:
             version+="-${{ env.VERSION_TYPE }}"
           fi
           
-          version+="+${{ env.MINECRAFT_VERSION }}"
+          version+="+${{ steps.branch.outputs.branch }}"
           echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Generate Name
@@ -62,13 +83,13 @@ jobs:
             name+=" ${version_type^}"
           fi
           
-          name+=" for ${{ env.MINECRAFT_VERSION }}"
+          name+=" for ${{ steps.branch.outputs.branch }}"
           echo "name=$name" >> $GITHUB_OUTPUT
 
-      - name: Extract Branch Name
-        id: branch
+      - name: Rename Build
+        if: ${{ env.LOADER }} === "forge"
         run: |
-          echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+          mv build/libs/notifhy-${{ steps.version.outputs.version }}-all.jar build/libs/notifhy-${{ steps.version.outputs.version }}.jar
 
       - name: Publish
         uses: Kir-Antipov/mc-publish@v3.2
@@ -81,7 +102,7 @@ jobs:
           version: "${{ steps.version.outputs.version }}"
 
           loaders: "${{ env.LOADER }}"
-          game-versions: "${{ env.MINECRAFT_VERSION }}"
+          game-versions: "${{ steps.branch.outputs.branch }}"
           java: "${{ env.JAVA_VERSION }}"
 
           files: "build/libs/notifhy-${{ steps.version.outputs.version }}.jar"
