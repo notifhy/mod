@@ -22,15 +22,13 @@ public class NetworkEventHandler {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onPlayerLoggedIn(net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        Event json = new Event(Event.Type.SERVER_CONNECTED.getType());
-        preconditions(json, event.manager);
+        preconditions(new Event(Event.Type.SERVER_CONNECTED.getType()), event.manager);
     }
 
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onPlayerLoggedOut(net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
-        Event json = new Event(Event.Type.SERVER_DISCONNECTED.getType());
-        preconditions(json, event.manager);
+        preconditions(new Event(Event.Type.SERVER_DISCONNECTED.getType()), event.manager);
     }
 
     private void preconditions(Event event, NetworkManager manager) {
