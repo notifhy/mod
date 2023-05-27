@@ -11,8 +11,13 @@ on:
         options:
           - fabric
           - forge
-      java_version:
-        description: "Compatible Java Version"
+      gradle_java_version:
+        description: "Gradle Java Version"
+        required: true
+        default: "17"
+        type: string
+      minecraft_java_version:
+        description: "Minecraft Java Version"
         required: true
         default: "8"
         type: string
