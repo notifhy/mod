@@ -84,7 +84,7 @@ jobs:
           echo "name=$name" >> $GITHUB_OUTPUT
 
       - name: Rename Build
-        if: ${{ inputs.loader }} === "forge"
+        if: ${{ inputs.loader == 'forge' }}
         run: |
           mv build/libs/notifhy-${{ steps.version.outputs.version }}-all.jar build/libs/notifhy-${{ steps.version.outputs.version }}.jar
 
