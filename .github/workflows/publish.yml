@@ -9,8 +9,7 @@ env:
   LOADER: forge
   JAVA_VERSION: 8
   MINECRAFT_VERSION: 1.8.9
-  VERSION_CORE: 0.0.1
-  VERSION_TYPE: alpha
+  VERSION: 0.0.1-alpha+1.8.9
 
 permissions:
   contents: write
@@ -49,13 +48,10 @@ jobs:
 
       - name: Generate Metadata
         run: |
-          echo "VERSION=${{ env.VERSION_CORE }}-${{ env.VERSION_TYPE }}+${{ env.MINECRAFT_VERSION }}" >> $GITHUB_ENV
           echo "NAME=NotifHy ${{ env.VERSION }}" >> $GITHUB_ENV
 
       - name: Publish
         uses: Kir-Antipov/mc-publish@v3.2
-        env:
-          FILE: /build/libs/*
         with:
           github-tag: "v${{ env.VERSION }}"
           github-token: "${{ secrets.GITHUB_TOKEN }}"
@@ -67,4 +63,7 @@ jobs:
           game-versions: "${{ env.MINECRAFT_VERSION }}"
           java: "${{ env.JAVA_VERSION }}"
 
-          files: "${{ env.FILE }}"
+          files: |
+            build/libs/*
+            build/libs/*.jar
+            build/libs*
