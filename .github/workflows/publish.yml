@@ -1,0 +1,87 @@
+name: Publish 1.19.4
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  LOADER: fabric
+  JAVA_VERSION: 17
+  MINECRAFT_VERSION: 1.19.4
+  VERSION_CORE: 0.0.1
+  VERSION_TYPE: alpha
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Environment Variables
+        run: env
+
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: 17
+
+      - name: Make Gradle Wrapper Executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+
+      - name: Build
+        run: ./gradlew clean build
+
+      - name: Generate Version
+        id: version
+        run: |
+          version="${{ env.VERSION_CORE }}"
+          
+          if [[ "${{ env.VERSION_TYPE }}" != "" ]]; then
+            version+="-${{ env.VERSION_TYPE }}"
+          fi
+          
+          version+="+${{ env.MINECRAFT_VERSION }}"
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Generate Name
+        id: name
+        run: |
+          name="${{ env.VERSION_CORE }}"
+          version_type="${{ env.VERSION_TYPE }}"
+          
+          if [[ $version_type != "" ]]; then
+            name+=" ${version_type^}"
+          fi
+          
+          name+=" for ${{ env.MINECRAFT_VERSION }}"
+          echo "name=$name" >> $GITHUB_OUTPUT
+
+      - name: Extract Branch Name
+        id: branch
+        run: |
+          echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+
+      - name: Publish
+        uses: Kir-Antipov/mc-publish@v3.2
+        with:
+          github-commitish: "${{ steps.branch.outputs.branch }}"
+          github-tag: "${{ steps.version.outputs.version }}"
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+          name: "${{ steps.name.outputs.name }}"
+          version: "${{ steps.version.outputs.version }}"
+
+          loaders: "${{ env.LOADER }}"
+          game-versions: "${{ env.MINECRAFT_VERSION }}"
+          java: "${{ env.JAVA_VERSION }}"
+
+          files: "build/libs/notifhy-${{ steps.version.outputs.version }}.jar"

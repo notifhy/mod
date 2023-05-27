@@ -6,7 +6,7 @@ import net.fabricmc.api.ClientModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.attituding.notifhy.config.NotifHyConfig;
-import xyz.attituding.notifhy.core.NotifHyCore;
+import xyz.attituding.notifhy.core.events.ClientPlayConnectionEventsHandler;
 
 public class NotifHy implements ClientModInitializer {
     public static final String MOD_ID = "notifhy";
@@ -14,11 +14,9 @@ public class NotifHy implements ClientModInitializer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(NotifHy.NAME);
 
-    public static NotifHyCore core;
-
     @Override
     public void onInitializeClient() {
         AutoConfig.register(NotifHyConfig.class, GsonConfigSerializer::new);
-        core = new NotifHyCore();
+        new ClientPlayConnectionEventsHandler();
     }
 }

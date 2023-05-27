@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "notifhy",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha+1.19.4",
   "name": "NotifHy",
   "description": "The companion mod for the NotifHy",
   "authors": [
@@ -24,10 +24,10 @@
     ]
   },
   "depends": {
-    "fabric-api": ">=0.28.0",
+    "fabric-api": ">=0.75.3",
     "fabricloader": ">=0.14.10",
     "java": ">=17",
-    "minecraft": "~1.19",
-    "modmenu": "^5.0.0"
+    "minecraft": "1.19.4",
+    "modmenu": "^6.0.0"
   }
 }
