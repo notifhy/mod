@@ -8,8 +8,10 @@ on:
 env:
   MINECRAFT_VERSION: 1.8.9
   JAVA_VERSION: 8
-  VERSION: 0.0.1-alpha+1.8.9
-  RELEASE_NAME: NotifHy 0.0.1-alpha for 1.8.9
+  LOADER: forge
+  VERSION: 0.0.1-alpha+${{ env.MINECRAFT_VERSION }}
+  NAME: NotifHy ${{ env.VERSION }}
+  FILE: /build/libs/notifhy-*-all.jar
 
 permissions:
   contents: write
@@ -42,15 +44,14 @@ jobs:
       - name: Publish
         uses: Kir-Antipov/mc-publish@v3.2
         with:
-          github-tag: "v${{env.VERSION}}"
+          github-tag: "v${{ env.VERSION }}"
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-          name: "${{env.RELEASE_NAME}}"
-          version: "${{env.VERSION}}"
-          version-type: alpha
+          name: "${{ env.RELEASE_NAME }}"
+          version: "${{ env.VERSION }}"
 
-          loaders: forge
-          game-versions: "${{env.MINECRAFT_VERSION}}"
-          java: "${{env.JAVA_VERSION}}"
+          loaders: "${{ env.LOADER }}"
+          game-versions: "${{ env.MINECRAFT_VERSION }}"
+          java: "${{ env.JAVA_VERSION }}"
 
-          files: /builds/libs/notifhy-*-all.jar
+          files: "${{ env.FILE }}"
