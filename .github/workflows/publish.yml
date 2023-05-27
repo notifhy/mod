@@ -79,7 +79,7 @@ jobs:
 
       - name: Rename Build
         run: |
-          mv build/libs/${{ steps.metadata.outputs.file_name }}-all.jar build/libs/${{ steps.metadata.outputs.file_name }}.jar
+          mv build/libs/notifhy-${{ steps.version.outputs.version }}-all.jar build/libs/notifhy-${{ steps.version.outputs.version }}.jar
 
       - name: Publish
         uses: Kir-Antipov/mc-publish@v3.2
