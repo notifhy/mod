@@ -44,6 +44,18 @@ jobs:
       - name: Debug
         run: ls
 
+      - name: Debug 2
+        run: cd build
+
+      - name: Debug 3
+        run: ls
+
+      - name: Debug 4
+        run: cd libs
+
+      - name: Debug 6
+        run: ls
+
       - name: Publish
         uses: Kir-Antipov/mc-publish@v3.2
         with:
