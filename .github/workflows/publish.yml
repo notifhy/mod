@@ -50,7 +50,7 @@ jobs:
       - name: Generate Version
         id: version
         run: |
-          version = ${{ env.VERSION_CORE }}
+          version = "${{ env.VERSION_CORE }}"
           
           if [[ "${{ env.VERSION_TYPE }}" != "" ]]; then
             version += "-${{ env.VERSION_TYPE }}"
@@ -62,8 +62,8 @@ jobs:
       - name: Generate Name
         id: name
         run: |
-          name = ${{ env.VERSION_CORE }}
-          version_type = ${{ env.VERSION_TYPE }}
+          name = "${{ env.VERSION_CORE }}"
+          version_type = "${{ env.VERSION_TYPE }}"
           
           if [[ $version_type != "" ]]; then
             name += " ${version_type^}"
