@@ -9,8 +9,8 @@ env:
   MINECRAFT_VERSION: 1.8.9
   JAVA_VERSION: 8
   LOADER: forge
-  VERSION: 0.0.1-alpha+${{ env.MINECRAFT_VERSION }}
-  NAME: NotifHy ${{ env.VERSION }}
+  VERSION: 0.0.1-alpha+1.8.9
+  NAME: NotifHy 0.0.1-alpha+1.8.9
   FILE: /build/libs/notifhy-*-all.jar
 
 permissions:
