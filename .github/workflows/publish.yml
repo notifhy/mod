@@ -85,7 +85,7 @@ jobs:
         uses: Kir-Antipov/mc-publish@v3.2
         with:
           github-commitish: "${{ steps.branch.outputs.branch }}"
-          github-tag: "${{ env.VERSION }}"
+          github-tag: "${{ steps.version.outputs.version }}"
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
           name: "${{ steps.name.outputs.name }}"
