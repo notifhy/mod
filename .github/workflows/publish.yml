@@ -64,3 +64,5 @@ jobs:
           game-versions: "${{ env.MINECRAFT_VERSION }}"
           java: "${{ env.JAVA_VERSION }}"
 
+          files: |
+            build*.jar
