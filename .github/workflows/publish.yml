@@ -63,7 +63,4 @@ jobs:
           game-versions: "${{ env.MINECRAFT_VERSION }}"
           java: "${{ env.JAVA_VERSION }}"
 
-          files: |
-            build/libs/*
-            build/libs/*.jar
-            build/libs*
+          files: "build/libs/ notifhy-0.0.1-alpha+1.8.9-all.jar"
