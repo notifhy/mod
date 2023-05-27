@@ -9,7 +9,8 @@ env:
   LOADER: forge
   JAVA_VERSION: 8
   MINECRAFT_VERSION: 1.8.9
-  VERSION: 0.0.1-alpha+1.8.9
+  VERSION_CORE: 0.0.1
+  VERSION_TYPE: alpha
 
 permissions:
   contents: write
@@ -46,13 +47,32 @@ jobs:
           cd libs
           ls
 
-      - name: Generate Metadata
-        id: metadata
+      - name: Generate Version
+        id: version
         run: |
-          echo "name=NotifHy ${{ env.VERSION }}" >> $GITHUB_OUTPUT
-          echo "file_name=notifhy-${{ env.VERSION }}" >> $GITHUB_OUTPUT
+          version = ${{ env.VERSION_CORE }}
+          
+          if [[ "${{ env.VERSION_TYPE }}" != "" ]]; then
+            version += "-${{ env.VERSION_TYPE }}"
+          fi
+          
+          version += "+${{ env.MINECRAFT_VERSION }}"
+          echo "version=$version" >> $GITHUB_OUTPUT
+          
+      - name: Generate Name
+        id: name
+        run: |
+          name = ${{ env.VERSION_CORE }}
+          version_type = ${{ env.VERSION_TYPE }}
+          
+          if [[ $version_type != "" ]]; then
+            name += " ${version_type^}"
+          fi
+          
+          name += " for ${{ env.MINECRAFT_VERSION }}"
+          echo "name=$name" >> $GITHUB_OUTPUT
 
-      - name: Extract branch name
+      - name: Extract Branch Name
         id: branch
         run: |
           echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
@@ -65,14 +85,14 @@ jobs:
         uses: Kir-Antipov/mc-publish@v3.2
         with:
           github-commitish: "${{ steps.branch.outputs.branch }}"
-          github-tag: "v${{ env.VERSION }}"
+          github-tag: "${{ env.VERSION }}"
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-          name: "${{ steps.metadata.outputs.name }}"
-          version: "${{ env.VERSION }}"
+          name: "${{ steps.name.outputs.name }}"
+          version: "${{ steps.version.outputs.version }}"
 
           loaders: "${{ env.LOADER }}"
           game-versions: "${{ env.MINECRAFT_VERSION }}"
           java: "${{ env.JAVA_VERSION }}"
 
-          files: "build/libs/${{ steps.metadata.outputs.file_name }}.jar"
+          files: "build/libs/notifhy-${{ steps.version.outputs.version }}.jar"
