@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "notifhy",
-  "version": "0.0.1-alpha+1.19.4",
+  "version": "${version}",
   "name": "NotifHy",
   "description": "The companion mod for the NotifHy",
   "authors": [
