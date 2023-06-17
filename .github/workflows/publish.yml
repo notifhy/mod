@@ -94,6 +94,10 @@ jobs:
           value: |
             ${{ steps.version.outputs.version }}
 
+      - name: Debug
+        run: |
+          cat gradle.properties
+
       - name: Build
         run: ./gradlew clean build
 
