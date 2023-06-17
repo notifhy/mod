@@ -90,9 +90,9 @@ jobs:
         with:
           path: 'gradle.properties'
           property: |
-            "mod_version"
+            mod_version
           value: |
-            "${{ steps.version.outputs.version }}"
+            ${{ steps.version.outputs.version }}
 
       - name: Build
         run: ./gradlew clean build
