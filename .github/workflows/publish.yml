@@ -97,11 +97,6 @@ jobs:
       - name: Build
         run: ./gradlew clean build
 
-      - name: Debug
-        run: |
-          ls build/libs
-          cat gradle.properties
-
       - name: Rename Build
         if: ${{ inputs.loader == 'forge' }}
         run: |
