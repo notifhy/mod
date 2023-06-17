@@ -85,9 +85,6 @@ jobs:
           name+=" for ${{ steps.branch.outputs.branch }}"
           echo "name=$name" >> $GITHUB_OUTPUT
 
-      - name: Build
-        run: ./gradlew clean build
-
       - name: Write Version
         uses: christian-draeger/write-properties@1.1.0
         with:
@@ -96,6 +93,9 @@ jobs:
             "mod_version"
           value: |
             "${{ steps.version.outputs.version }}"
+
+      - name: Build
+        run: ./gradlew clean build
 
       - name: Rename Build
         if: ${{ inputs.loader == 'forge' }}
