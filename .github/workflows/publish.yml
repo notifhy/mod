@@ -55,9 +55,6 @@ jobs:
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
 
-      - name: Build
-        run: ./gradlew clean build
-
       - name: Extract Branch Name
         id: branch
         run: |
@@ -87,6 +84,18 @@ jobs:
           
           name+=" for ${{ steps.branch.outputs.branch }}"
           echo "name=$name" >> $GITHUB_OUTPUT
+
+      - name: Write Version
+        uses: christian-draeger/write-properties@1.1.0
+        with:
+          path: 'gradle.properties'
+          property: |
+            mod_version
+          value: |
+            ${{ steps.version.outputs.version }}
+
+      - name: Build
+        run: ./gradlew clean build
 
       - name: Rename Build
         if: ${{ inputs.loader == 'forge' }}
