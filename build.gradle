@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.0-SNAPSHOT'
+    id 'fabric-loom' version '1.2-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -30,6 +30,12 @@ dependencies {
     modImplementation "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
     include "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
 
+    // why
+    include implementation("org.apache.httpcomponents:httpasyncclient:${project.httpclientasync_version}")
+    include implementation("org.apache.httpcomponents:httpclient:${project.httpclient_version}")
+    include implementation("org.apache.httpcomponents:httpcore:${httpcore_version}")
+    include implementation("org.apache.httpcomponents:httpcore-nio:${httpcore_version}")
+
     implementation "com.google.guava:guava:${project.guava_version}"
     implementation "com.google.code.gson:gson:${project.gson_version}"
 }
@@ -51,7 +57,7 @@ java {
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
     // If you remove this line, sources will not be generated.
-    withSourcesJar()
+    // withSourcesJar()
 }
 
 jar {
