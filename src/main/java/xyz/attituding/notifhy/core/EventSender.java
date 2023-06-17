@@ -15,54 +15,70 @@ import xyz.attituding.notifhy.NotifHy;
 import xyz.attituding.notifhy.config.NotifHyConfig;
 
 import java.util.Base64;
+import java.util.concurrent.CompletableFuture;
 
 public class EventSender {
     private static final Gson gson = new Gson();
 
     public static void send(Event event) {
-        try {
-            GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
 
-            if (profile == null) {
-                NotifHy.LOGGER.warn("Profile is null, cannot proceed");
-                return;
+                if (profile == null) {
+                    NotifHy.LOGGER.warn("Profile is null, cannot proceed");
+                    return null;
+                }
+
+                String uuid = profile.getId().toString();
+                normalizeUUID(uuid);
+
+                String authorization = "Basic " + Base64.getEncoder().encodeToString((uuid + ":" + NotifHyConfig.authentication).getBytes());
+                EventPayloadBuilder payload = new EventPayloadBuilder(event);
+
+                HttpPost request = createHttpPost(NotifHyConfig.Advanced.server, authorization, payload);
+
+                HttpClient httpClient = HttpClientBuilder.create().build();
+                HttpResponse response = httpClient.execute(request);
+
+                handleResponse(event, createHttpPost(NotifHyConfig.Advanced.server, authorization, payload), response);
+            } catch (Exception e) {
+                NotifHy.LOGGER.error("Failed to ping", e);
             }
 
-            String uuid = profile.getId().toString();
+            return null;
+        });
+    }
 
-            // Normalize uuid as uuid may not have dashes
-            if (uuid.length() == 32) {
-                StringBuilder uuidTemp = new StringBuilder(uuid);
-                uuidTemp.insert(20, '-');
-                uuidTemp.insert(16, '-');
-                uuidTemp.insert(12, '-');
-                uuidTemp.insert(8, '-');
-                uuid = uuidTemp.toString();
-            }
+    private static void normalizeUUID(String uuid) {
+        if (uuid.length() == 32) {
+            StringBuilder uuidTemp = new StringBuilder(uuid);
+            uuidTemp.insert(20, '-');
+            uuidTemp.insert(16, '-');
+            uuidTemp.insert(12, '-');
+            uuidTemp.insert(8, '-');
+            uuid = uuidTemp.toString();
+        }
+    }
 
-            String authorization = "Basic " + Base64.getEncoder().encodeToString((uuid + ":" + NotifHyConfig.authentication).getBytes());
-            EventPayloadBuilder payload = new EventPayloadBuilder(event);
+    private static HttpPost createHttpPost(String serverUrl, String authorization, EventPayloadBuilder payload) {
+        HttpPost request = new HttpPost(serverUrl);
+        request.addHeader("Authorization", authorization);
+        request.setEntity(new StringEntity(gson.toJson(payload), ContentType.APPLICATION_JSON));
+        return request;
+    }
 
-            HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpPost request = new HttpPost(NotifHyConfig.Advanced.server);
-            request.addHeader("Authorization", authorization);
-            request.setEntity(new StringEntity(gson.toJson(payload), ContentType.APPLICATION_JSON));
+    private static void handleResponse(Event event, HttpPost request, HttpResponse response) throws Exception {
+        NotifHy.LOGGER.info("Sent payload type " + event.type + ": " + EntityUtils.toString(request.getEntity()));
 
-            HttpResponse response = httpClient.execute(request);
+        int responseCode = response.getStatusLine().getStatusCode();
 
-            NotifHy.LOGGER.info("Sent " + EntityUtils.toString(request.getEntity()));
-
-            int responseCode = response.getStatusLine().getStatusCode();
-
-            if (responseCode >= HttpStatus.SC_OK && responseCode < HttpStatus.SC_MULTIPLE_CHOICES) {
-                NotifHy.LOGGER.info("Successfully pinged");
-            } else if (response.getEntity() != null) {
-                NotifHy.LOGGER.warn("Failed to ping with response code " + responseCode + " and body " + EntityUtils.toString(response.getEntity()));
-            } else {
-                NotifHy.LOGGER.warn("Failed to ping with response code " + responseCode);
-            }
-        } catch (Exception e) {
-            NotifHy.LOGGER.error("Failed to ping", e);
+        if (responseCode >= HttpStatus.SC_OK && responseCode < HttpStatus.SC_MULTIPLE_CHOICES) {
+            NotifHy.LOGGER.info("Successfully pinged");
+        } else if (response.getEntity() != null) {
+            NotifHy.LOGGER.warn("Failed to ping with response code " + responseCode + " and body " + EntityUtils.toString(response.getEntity()));
+        } else {
+            NotifHy.LOGGER.warn("Failed to ping with response code " + responseCode);
         }
     }
 }

@@ -14,6 +14,9 @@ val modGroup: String by project
 val modId: String by project
 val modVersion: String by project
 val minecraftVersion: String by project
+val httpclientVersion: String by project
+val httpclientasyncVersion: String by project
+val httpcoreVersion: String by project
 
 group = modGroup
 version = modVersion
