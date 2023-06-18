@@ -113,7 +113,7 @@ jobs:
           ls build/libs
           cat gradle.properties
 
-      - name: Rename Build
+      - name: Rename Build (Forge)
         if: ${{ inputs.loader == 'forge' }}
         run: |
           mv build/libs/notifhy-${{ steps.version.outputs.version }}-all.jar build/libs/notifhy-${{ steps.version.outputs.version }}.jar
