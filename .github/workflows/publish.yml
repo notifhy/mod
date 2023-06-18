@@ -96,6 +96,7 @@ jobs:
 
       - name: Debug
         run: |
+          ls build/libs
           cat gradle.properties
 
       - name: Build
