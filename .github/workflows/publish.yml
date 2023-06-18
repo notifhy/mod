@@ -85,12 +85,23 @@ jobs:
           name+=" for ${{ steps.branch.outputs.branch }}"
           echo "name=$name" >> $GITHUB_OUTPUT
 
-      - name: Write Version
+      - name: Write Version (Fabric)
+        if: ${{ inputs.loader == 'fabric' }}
         uses: christian-draeger/write-properties@1.1.0
         with:
           path: 'gradle.properties'
           property: |
             mod_version
+          value: |
+            ${{ steps.version.outputs.version }}
+
+      - name: Write Version (Forge)
+        if: ${{ inputs.loader == 'forge' }}
+        uses: christian-draeger/write-properties@1.1.0
+        with:
+          path: 'gradle.properties'
+          property: |
+            modVersion
           value: |
             ${{ steps.version.outputs.version }}
 
