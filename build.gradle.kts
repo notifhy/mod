@@ -8,15 +8,11 @@ plugins {
 
 val forge_version: String by project
 val gson_version: String by project
-val guava_version: String by project
 val mcp_mappings: String by project
 val mod_group: String by project
 val mod_id: String by project
 val mod_version: String by project
 val minecraft_version: String by project
-val httpclient_version: String by project
-val httpclientasync_version: String by project
-val httpcore_version: String by project
 
 group = mod_group
 version = mod_version
