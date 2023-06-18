@@ -6,16 +6,16 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
-val forge_version: String by project
-val gson_version: String by project
-val mcp_mappings: String by project
-val mod_group: String by project
-val mod_id: String by project
-val mod_version: String by project
-val minecraft_version: String by project
+val forgeVersion: String by project
+val gsonVersion: String by project
+val mcpMappings: String by project
+val modGroup: String by project
+val modId: String by project
+val modVersion: String by project
+val minecraftVersion: String by project
 
-group = mod_group
-version = mod_version
+group = modGroup
+version = modVersion
 
 // Toolchains:
 java {
@@ -44,10 +44,10 @@ val shadowImpl: Configuration by configurations.creating {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${minecraft_version}")
-    mappings("de.oceanlabs.mcp:mcp_stable:${mcp_mappings}")
-    forge("net.minecraftforge:forge:${forge_version}")
-    implementation("com.google.code.gson:gson:${gson_version}")
+    minecraft("com.mojang:minecraft:${minecraftVersion}")
+    mappings("de.oceanlabs.mcp:mcp_stable:${mcpMappings}")
+    forge("net.minecraftforge:forge:${forgeVersion}")
+    implementation("com.google.code.gson:gson:${gsonVersion}")
 }
 
 // Tasks:
@@ -56,7 +56,7 @@ tasks.withType(JavaCompile::class) {
 }
 
 tasks.withType(Jar::class) {
-    archiveBaseName.set(mod_id)
+    archiveBaseName.set(modId)
     manifest.attributes.run {
         this["FMLCorePluginContainsFMLMod"] = "true"
         this["ForceLoadAsMod"] = "true"
