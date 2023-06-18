@@ -94,13 +94,13 @@ jobs:
           value: |
             ${{ steps.version.outputs.version }}
 
+      - name: Build
+        run: ./gradlew clean build
+
       - name: Debug
         run: |
           ls build/libs
           cat gradle.properties
-
-      - name: Build
-        run: ./gradlew clean build
 
       - name: Rename Build
         if: ${{ inputs.loader == 'forge' }}
