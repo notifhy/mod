@@ -85,7 +85,8 @@ jobs:
           name+=" for ${{ steps.branch.outputs.branch }}"
           echo "name=$name" >> $GITHUB_OUTPUT
 
-      - name: Write Version
+      - name: Write Version (Fabric)
+        if: ${{ inputs.loader == 'fabric' }}
         uses: christian-draeger/write-properties@1.1.0
         with:
           path: 'gradle.properties'
@@ -94,10 +95,25 @@ jobs:
           value: |
             ${{ steps.version.outputs.version }}
 
+      - name: Write Version (Forge)
+        if: ${{ inputs.loader == 'forge' }}
+        uses: christian-draeger/write-properties@1.1.0
+        with:
+          path: 'gradle.properties'
+          property: |
+            modVersion
+          value: |
+            ${{ steps.version.outputs.version }}
+
       - name: Build
         run: ./gradlew clean build
 
-      - name: Rename Build
+      - name: Debug
+        run: |
+          ls build/libs
+          cat gradle.properties
+
+      - name: Rename Build (Forge)
         if: ${{ inputs.loader == 'forge' }}
         run: |
           mv build/libs/notifhy-${{ steps.version.outputs.version }}-all.jar build/libs/notifhy-${{ steps.version.outputs.version }}.jar

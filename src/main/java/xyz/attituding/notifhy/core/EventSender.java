@@ -5,11 +5,11 @@ import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.MinecraftClient;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import xyz.attituding.notifhy.NotifHy;
 import xyz.attituding.notifhy.config.NotifHyConfig;
@@ -30,17 +30,12 @@ public class EventSender {
                 String authorization = "Basic " + Base64.getEncoder().encodeToString((uuid + ":" + config.authentication).getBytes());
                 EventPayloadBuilder payload = new EventPayloadBuilder(event);
 
-                CloseableHttpAsyncClient httpClient = HttpAsyncClients.createDefault();
-                httpClient.start();
-
                 HttpPost request = createHttpPost(config.advanced.server, authorization, payload);
-                CompletableFuture<HttpResponse> future = new CompletableFuture<>();
-                httpClient.execute(request, new ResponseHandler(future));
 
-                HttpResponse response = future.get();
-                httpClient.close();
+                HttpClient httpClient = HttpClientBuilder.create().build();
+                HttpResponse response = httpClient.execute(request);
 
-                handleResponse(event, request, response);
+                handleResponse(event, createHttpPost(config.advanced.server, authorization, payload), response);
             } catch (Exception e) {
                 NotifHy.LOGGER.error("Failed to ping", e);
             }
@@ -78,29 +73,6 @@ public class EventSender {
             NotifHy.LOGGER.warn("Failed to ping with response code " + responseCode + " and body " + EntityUtils.toString(response.getEntity()));
         } else {
             NotifHy.LOGGER.warn("Failed to ping with response code " + responseCode);
-        }
-    }
-
-    private static class ResponseHandler implements org.apache.http.concurrent.FutureCallback<HttpResponse> {
-        private final CompletableFuture<HttpResponse> future;
-
-        public ResponseHandler(CompletableFuture<HttpResponse> future) {
-            this.future = future;
-        }
-
-        @Override
-        public void completed(HttpResponse result) {
-            future.complete(result);
-        }
-
-        @Override
-        public void failed(Exception ex) {
-            future.completeExceptionally(ex);
-        }
-
-        @Override
-        public void cancelled() {
-            future.cancel(true);
         }
     }
 }
