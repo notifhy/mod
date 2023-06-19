@@ -79,4 +79,10 @@ tasks.shadowJar {
     }
 }
 
+tasks.processResources {
+    filesMatching("mcmod.info") {
+        expand(mapOf("version" to modVersion, "mcversion" to minecraftVersion))
+    }
+}
+
 tasks.assemble.get().dependsOn(tasks.remapJar)

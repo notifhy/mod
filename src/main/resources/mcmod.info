@@ -1,18 +1,18 @@
 [
   {
-	"modid": "notifhy",
-	"name": "NotifHy",
-	"description": "The companion mod for the NotifHy",
-	"version": "0.0.1-alpha+1.8.9",
-	"mcversion": "[1.8.9-1.12.2]",
-	"url": "https://github.com/notifhy/mod",
-	"updateUrl": "",
-	"authorList": [
-	  "Attituding"
-	],
-	"credits": "",
-	"logoFile": "/assets/notifhy/icon.png",
-	"screenshots": [],
-	"dependencies": []
+    "modid": "notifhy",
+    "name": "NotifHy",
+    "description": "The companion mod for the NotifHy",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/notifhy/mod",
+    "updateUrl": "",
+    "authorList": [
+      "Attituding"
+    ],
+    "credits": "",
+    "logoFile": "/assets/notifhy/icon.png",
+    "screenshots": [],
+    "dependencies": []
   }
 ]
